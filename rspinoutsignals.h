@@ -4,7 +4,7 @@
 #include <QtCore/QObject>
 #include <QtCore/qglobal.h>
 #include <QtSerialPort/QSerialPort>
-#include <vector>
+#include <array>
 #include <QVariant>
 
 class RSPinoutSignals : public QSerialPort

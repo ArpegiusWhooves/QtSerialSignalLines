@@ -2,12 +2,11 @@
 #include <QTimerEvent>
 #include <QMetaEnum>
 #include <QDebug>
-#include <array>
 
 static constexpr std::array<QSerialPort::PinoutSignal,9> RSPinout {
         QSerialPort::DataCarrierDetectSignal, //1
-        QSerialPort::TransmittedDataSignal,//2
-        QSerialPort::ReceivedDataSignal,//3
+        QSerialPort::NoSignal,//2
+        QSerialPort::NoSignal,//3
         QSerialPort::DataTerminalReadySignal,//4
         QSerialPort::NoSignal, //5
         QSerialPort::DataSetReadySignal, //6
