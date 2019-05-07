@@ -47,6 +47,8 @@ signals:
 
     void pinStatusChanged(int pin, bool state);
 
+    void openStatus(bool opened);
+
 public slots:
 
     void setIntCount(int intCount);
@@ -61,6 +63,7 @@ private:
     int m_interval = 0;
     std::array<int,PinsCount> m_integrals{};
     std::array<bool,PinsCount> m_states{};
+    bool m_opened = false;
 };
 
 #endif // RSPINOUTSIGNALS_H
