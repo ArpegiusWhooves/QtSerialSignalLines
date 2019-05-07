@@ -16,16 +16,16 @@ static constexpr std::array<QSerialPort::PinoutSignal,9> RSPinout {
         QSerialPort::RingIndicatorSignal  //9
 };
 
-RSPinoutSignals::RSPinoutSignals(QObject *parent) : QObject(parent)
+RSPinoutSignals::RSPinoutSignals(QObject *parent) : QSerialPort(parent)
 {
 }
 
 void RSPinoutSignals::timerEvent(QTimerEvent *e)
 {
     if( e->timerId() == m_timer_id ) {
-        if(!m_port.isOpen()) return;
+        if(!isOpen()) return;
 
-        QSerialPort::PinoutSignals pins = m_port.pinoutSignals();
+        QSerialPort::PinoutSignals pins = pinoutSignals();
 
         for(size_t i=0; i<PinsCount; ++i ) {
             QSerialPort::PinoutSignal sig = RSPinout[i];
@@ -51,17 +51,6 @@ void RSPinoutSignals::timerEvent(QTimerEvent *e)
                 }
             }
         }
-
-//        QSerialPort::PinoutSignals ps =  m_port.pinoutSignals();
-//        QMetaEnum en = QMetaEnum::fromType<QSerialPort::PinoutSignal>();
-
-//        for(int i=0; i<en.keyCount(); ++i) {
-//            if(ps.testFlag( QSerialPort::PinoutSignal(en.value(i)) ) )
-//            {
-//                qDebug() << en.valueToKeys()
-//            }
-//        }
-
     }
 }
 
@@ -102,19 +91,18 @@ void RSPinoutSignals::setInterval(int interval)
 
 }
 
-void RSPinoutSignals::setPortName(QString portName)
+void RSPinoutSignals::setupPortName(QString p_portName)
 {
-    if (m_portName == portName)
+    if (portName() == p_portName)
         return;
 
-    m_portName = portName;
-    emit portNameChanged(m_portName);
+    if(isOpen()) close();
 
-    if(m_port.isOpen()) m_port.close();
-    if(!m_portName.isEmpty()) {
-        m_port.setPortName(m_portName);
-        if(!m_port.open(QIODevice::ReadWrite)){
-            qWarning() << "Cannot open port:" << m_port.errorString();
-        }
+    setPortName(p_portName);
+    emit portNameChanged(p_portName);
+
+    if(p_portName.isEmpty()) return;
+    if(!open(QIODevice::ReadWrite)){
+       qWarning() << "Cannot open port:" << errorString();
     }
 }

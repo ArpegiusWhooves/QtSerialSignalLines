@@ -16,6 +16,7 @@ Window {
        onPinStatusChanged: {
             lines.itemAt(pin).color = state ? "green" : "red";
        }
+       Component.onCompleted: dataTerminalReady=true
     }
 
     Column{

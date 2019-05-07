@@ -7,13 +7,13 @@
 #include <vector>
 #include <QVariant>
 
-class RSPinoutSignals : public QObject
+class RSPinoutSignals : public QSerialPort
 {
     Q_OBJECT
     Q_PROPERTY(int interval READ interval WRITE setInterval NOTIFY intervalChanged)
     Q_PROPERTY(int intCount READ intCount WRITE setIntCount NOTIFY intCountChanged)
     Q_PROPERTY(QVariant pinList READ pinList CONSTANT)
-    Q_PROPERTY(QString portName READ portName WRITE setPortName NOTIFY portNameChanged)
+    Q_PROPERTY(QString portName READ portName WRITE setupPortName NOTIFY portNameChanged)
 
 public:
 
@@ -31,11 +31,6 @@ public:
     int interval() const
     {
         return m_interval;
-    }
-
-    QString portName() const
-    {
-        return m_portName;
     }
 
     QVariant pinList() const;
@@ -58,11 +53,9 @@ public slots:
 
     void setInterval(int interval);
 
-    void setPortName(QString portName);
+    void setupPortName(QString portName);
 
 private:
-    QSerialPort m_port;
-    QString m_portName;
     int m_timer_id = 0;
     int m_intCount = 0;
     int m_interval = 0;
