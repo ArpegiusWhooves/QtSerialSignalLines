@@ -23,10 +23,7 @@ void RSPinoutSignals::timerEvent(QTimerEvent *e)
 {
     if( e->timerId() == m_timer_id ) {
         if(!isOpen()){
-            if(!m_opened) return;
-            m_opened=false;
-            emit openStatus(false);
-            return;
+            return setOpened(false);
         }
 
         QSerialPort::PinoutSignals pins = pinoutSignals();
@@ -105,14 +102,11 @@ void RSPinoutSignals::setupPortName(QString p_portName)
     setPortName(p_portName);
     emit portNameChanged(p_portName);
 
-    if(p_portName.isEmpty()) return;
+    if(p_portName.isEmpty()) return setOpened(false);
     if(!open(QIODevice::ReadWrite)){
        qWarning() << "Cannot open port:" << errorString();
-       if(!m_opened) return;
-       m_opened=false;
-       emit openStatus(false);
-       return;
+       return setOpened(false);
     }
     m_opened=true;
-    emit openStatus(true);
+    emit openedChanged(true);
 }

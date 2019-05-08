@@ -14,6 +14,7 @@ class RSPinoutSignals : public QSerialPort
     Q_PROPERTY(int intCount READ intCount WRITE setIntCount NOTIFY intCountChanged)
     Q_PROPERTY(QVariant pinList READ pinList CONSTANT)
     Q_PROPERTY(QString portName READ portName WRITE setupPortName NOTIFY portNameChanged)
+    Q_PROPERTY(bool opened READ opened WRITE setOpened NOTIFY openedChanged)
 
 public:
 
@@ -37,6 +38,11 @@ public:
 
     Q_INVOKABLE bool pinStatus(unsigned i);
 
+    bool opened() const
+    {
+        return m_opened;
+    }
+
 signals:
 
     void intCountChanged(int intCount);
@@ -47,7 +53,7 @@ signals:
 
     void pinStatusChanged(int pin, bool state);
 
-    void openStatus(bool opened);
+    void openedChanged(bool opened);
 
 public slots:
 
@@ -56,6 +62,15 @@ public slots:
     void setInterval(int interval);
 
     void setupPortName(QString portName);
+
+    void setOpened(bool opened)
+    {
+        if (m_opened == opened)
+            return;
+
+        m_opened = opened;
+        emit openedChanged(m_opened);
+    }
 
 private:
     int m_timer_id = 0;
